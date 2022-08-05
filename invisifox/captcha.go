@@ -18,7 +18,9 @@ func (client *CaptchaClient) GetBalance() (*BalanceResponse, error) {
 	query.Add("token", client.APIKey)
 
 	req, err := http.NewRequest("GET", "https://api.invisifox.com/balance?"+query.Encode(), nil)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	req.Header.Set("authority", "api.invisifox.com")
 	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
@@ -40,7 +42,9 @@ func (client *CaptchaClient) GetBalance() (*BalanceResponse, error) {
 	var reply BalanceResponse
 
 	err = json.NewDecoder(res.Body).Decode(&reply)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	return &reply, nil
 }
@@ -73,12 +77,16 @@ func (client *CaptchaClient) SolveCaptcha(pageurl, sitekey, proxy, rqdata, usera
 	req.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.81 Safari/537.36")
 
 	res, err := client.HTTPClient.Do(req)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	var reply SolveCaptchaResponse
 
 	err = json.NewDecoder(res.Body).Decode(&reply)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	return &reply, nil
 }
@@ -113,7 +121,9 @@ func (client *CaptchaClient) GetSolution(taskId string) (*SolutionResponse, erro
 	var reply SolutionResponse
 
 	err = json.NewDecoder(res.Body).Decode(&reply)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	return &reply, nil
 }
