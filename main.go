@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	client := invisifox.New("v1exC65dG4A7bbE1/2N17OJmPEnKn8sRTj3tS.Uo0NTd4lq6XwzKy")
+	client := invisifox.New("steal")
 
 	balance, err := client.GetBalance()
 	if err != nil {
@@ -16,7 +16,7 @@ func main() {
 
 	fmt.Printf("Your balance: %v\n", balance.CaptchaBalance)
 
-	task, err := client.SolveCaptcha("discord.com", "4c672d35-0701-42b2-88c3-78380b0db560", "LilForkiAv9:29KAb6Gg5ZDX74ls_sticky-3@142.202.220.242:6484", "", "", "", "false")
+	task, err := client.SolveCaptcha("x", "x", "x", "x", "x", "x", "false")
 	if err != nil {
 		panic(err)
 	}
