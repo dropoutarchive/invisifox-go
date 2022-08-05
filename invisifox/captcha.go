@@ -13,7 +13,7 @@ func New(apikey string) *CaptchaClient {
 	}
 }
 
-func (client *CaptchaClient) GetBalance() *BalanceResponse {
+func (client *CaptchaClient) GetBalance() (*BalanceResponse, error) {
 	query := url.Values{}
 	query.Add("token", client.APIKey)
 
@@ -33,17 +33,19 @@ func (client *CaptchaClient) GetBalance() *BalanceResponse {
 	req.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.81 Safari/537.36")
 
 	res, err := client.HTTPClient.Do(req)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	var reply BalanceResponse
 
 	err = json.NewDecoder(res.Body).Decode(&reply)
 	HandleError(err)
 
-	return &reply
+	return &reply, nil
 }
 
-func (client *CaptchaClient) SolveCaptcha(pageurl, sitekey, proxy, rqdata, useragent, cookies, invisible string) *SolveCaptchaResponse {
+func (client *CaptchaClient) SolveCaptcha(pageurl, sitekey, proxy, rqdata, useragent, cookies, invisible string) (*SolveCaptchaResponse, error) {
 	query := url.Values{}
 	query.Add("token", client.APIKey)
 	query.Add("siteKey", sitekey)
@@ -54,7 +56,9 @@ func (client *CaptchaClient) SolveCaptcha(pageurl, sitekey, proxy, rqdata, usera
 	query.Add("invisible", invisible)
 
 	req, err := http.NewRequest("GET", "https://api.invisifox.com/hcaptcha?"+query.Encode(), nil)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	req.Header.Set("authority", "api.invisifox.com")
 	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
@@ -76,16 +80,18 @@ func (client *CaptchaClient) SolveCaptcha(pageurl, sitekey, proxy, rqdata, usera
 	err = json.NewDecoder(res.Body).Decode(&reply)
 	HandleError(err)
 
-	return &reply
+	return &reply, nil
 }
 
-func (client *CaptchaClient) GetSolution(taskId string) *SolutionResponse {
+func (client *CaptchaClient) GetSolution(taskId string) (*SolutionResponse, error) {
 	query := url.Values{}
 	query.Add("token", client.APIKey)
 	query.Add("taskId", taskId)
 
 	req, err := http.NewRequest("GET", "https://api.invisifox.com/solution?"+query.Encode(), nil)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	req.Header.Set("authority", "api.invisifox.com")
 	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
@@ -100,12 +106,14 @@ func (client *CaptchaClient) GetSolution(taskId string) *SolutionResponse {
 	req.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.81 Safari/537.36")
 
 	res, err := client.HTTPClient.Do(req)
-	HandleError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	var reply SolutionResponse
 
 	err = json.NewDecoder(res.Body).Decode(&reply)
 	HandleError(err)
 
-	return &reply
+	return &reply, nil
 }

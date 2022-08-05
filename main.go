@@ -7,17 +7,29 @@ import (
 )
 
 func main() {
-	client := invisifox.New("token secret")
+	client := invisifox.New("v1exC65dG4A7bbE1/2N17OJmPEnKn8sRTj3tS.Uo0NTd4lq6XwzKy")
 
-	balance := client.GetBalance()
+	balance, err := client.GetBalance()
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Printf("Your balance: %v\n", balance.CaptchaBalance)
 
-	task := client.SolveCaptcha("pageurl", "sitekey", "username:password@ip:port", "rqdata", "user-agent", "cookies", "false")
+	task, err := client.SolveCaptcha("discord.com", "4c672d35-0701-42b2-88c3-78380b0db560", "LilForkiAv9:29KAb6Gg5ZDX74ls_sticky-3@142.202.220.242:6484", "", "", "", "false")
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Printf("Created task: %v\n", task.TaskID)
 
 	var result *invisifox.SolutionResponse
 	for {
-		result = client.GetSolution(task.TaskID)
+		result, err = client.GetSolution(task.TaskID)
+		if err != nil {
+			panic(err)
+		}
+
 		fmt.Printf("Task status: %v\n", result.Status)
 
 		if result.Status == "WAITING" {
